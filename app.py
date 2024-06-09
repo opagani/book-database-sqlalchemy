@@ -9,6 +9,9 @@
 
 from models import Book, Base, engine, session
 
+import datetime
+import csv
+
 
 def menu():
     while True:
@@ -28,6 +31,40 @@ def menu():
             input("""\rPlease choose one of the options above.
                   \rA number from 1-5.
                   \rPress enter to try again.""")
+
+
+def clean_date(date_str):
+    # datetime.date()
+    months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ]
+
+    # "October 25, 2010"
+    split_date = date_str.split(" ")
+    month = str(months.index(split_date[0]) + 1)
+    day = int(split_date[1].split(",")[0])
+    year = int(split_date[2])
+    print(month, day, year)
+
+    return datetime.date(year, int(month), day)
+
+
+def add_csv():
+    with open("suggested_books.csv") as csvfile:
+        data = csv.reader(csvfile)
+        for row in data:
+            print(row)
 
 
 def app():
@@ -53,4 +90,6 @@ def app():
 
 if __name__ == "__main__":
     Base.metadata.create_all(engine)
-    app()
+    # app()
+    # add_csv()
+    clean_date("October 25, 2010")
