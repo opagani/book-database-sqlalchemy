@@ -62,10 +62,10 @@ def clean_date(date_str):
         return_date = datetime.date(year, month, day)
     except ValueError:
         input("""
-        \n****** DATE ERROR ******
-        \rThe date format should include a valid Month Day, Year from the past
-        \rEx: October 25, 2010
-        \rPress enter to try again.""")
+          \n****** DATE ERROR ******
+          \rThe date format should include a valid Month Day, Year from the past.
+          \rEx: October 25, 2010
+          \rPress enter to try again.""")
         return
     else:
         return return_date
@@ -77,12 +77,34 @@ def clean_price(price_str):
         # print(price_float)
     except ValueError:
         input("""
-        \n****** PRICE ERROR ******
-        \rThe price should be a number without a currency symbol
-        \rEx: 10.99
-        \rPress enter to try again.""")
+          \n****** PRICE ERROR ******
+          \rThe price should be a number without a currency symbol.
+          \rEx: 10.99
+          \rPress enter to try again.""")
     else:
         return int(price_float * 100)
+
+
+def clean_id(id_str, options):
+    try:
+        book_id = int(id_str)
+
+    except ValueError:
+        input("""
+          \n****** ID ERROR ******
+          \rThe id should be a number.
+          \rPress enter to try again.
+          \r**********************""")
+        return
+    else:
+        if book_id in options:
+            return book_id
+        else:
+            input(f"""
+              \n****** ID ERROR ******
+              \rOptions: {options}
+              \rPress enter to try again.""")
+            return
 
 
 def add_csv():
@@ -140,7 +162,28 @@ def app():
             input("\nPress enter to return to the main menu.")
         elif choice == "3":
             # Search for book
-            pass
+            # pass
+
+            # id_options = []
+            # for book in session.query(Book):
+            #     id_options.append(book.id)
+
+            id_options = [book.id for book in session.query(Book)]
+            id_error = True
+            while id_error:
+                id_choice = input(f"""
+                    \nId Options {id_options}            
+                    \rBook id: """)
+                id_choice = clean_id(id_choice, id_options)
+                if type(id_choice) == int:
+                    id_error = False
+
+            the_book = session.query(Book).filter(Book.id == id_choice).first()
+            print(f"""
+                \n{the_book.title} by {the_book.author}
+                \rPublished: {the_book.published_date}
+                \rPrice: ${the_book.price / 100}""")
+            input("\nPress enter to return to the main menu.")
         elif choice == "4":
             # Book Analysis
             pass
