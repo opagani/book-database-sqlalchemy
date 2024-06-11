@@ -246,7 +246,28 @@ def app():
                 time.sleep(1.5)
         elif choice == "4":
             # Book Analysis
-            pass
+            # pass
+            oldest_book = session.query(Book).order_by(Book.published_date).first()
+            newest_book = (
+                session.query(Book).order_by(Book.published_date.desc()).first()
+            )
+            total_books = session.query(Book).count()
+            python_books = (
+                session.query(Book).filter(Book.title.like("%Python%")).count()
+            )
+            books_added_after_2015 = (
+                session.query(Book)
+                .filter(Book.published_date > datetime.date(2015, 1, 1))
+                .count()
+            )
+            print(f"""
+                  \n**** BOOK ANALYSIS ****
+                  \rOldest Book: {oldest_book.title} published on {oldest_book.published_date}
+                  \rNewest Book: {newest_book.title} published on {newest_book.published_date}
+                  \rTotal Books: {total_books}
+                  \rBooks with Python in the title: {python_books}
+                  \rBooks added after 2015: {books_added_after_2015}""")
+            print("\nPress enter to return to the main menu.")
         else:
             print("GOODBYE")
             app_running = False
